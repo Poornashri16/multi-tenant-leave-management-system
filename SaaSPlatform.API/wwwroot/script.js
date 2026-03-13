@@ -2,291 +2,253 @@ const API = "http://localhost:5221/api";
 
 let token = localStorage.getItem("token");
 
-
 // ================= LOGIN =================
+async function login() {
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+    const role = document.getElementById("role").value;
 
-async function login(){
+    const res = await fetch(`${API}/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password })
+    });
 
-const email = document.getElementById("email").value;
-const password = document.getElementById("password").value;
-const role = document.getElementById("role").value;
+    if (res.ok) {
+        const data = await res.json();
+        localStorage.setItem("token", data.token);
+        alert("Login Success");
 
-const res = await fetch(`${API}/auth/login`,{
-method:"POST",
-headers:{
-"Content-Type":"application/json"
-},
-body:JSON.stringify({email,password})
-});
-
-if(res.ok){
-
-const data = await res.json();
-
-localStorage.setItem("token",data.token);
-
-alert("Login Success");
-
-if(role === "Admin")
-window.location="admin.html";
-else
-window.location="employee.html";
-
+        if (role === "Admin")
+            window.location = "admin.html";
+        else
+            window.location = "employee.html";
+    } else {
+        alert("Login Failed");
+    }
 }
-else{
-alert("Login Failed");
-}
-
-}
-
-
 
 // ================= LOGOUT =================
-
-function logout(){
-
-localStorage.removeItem("token");
-
-window.location="index.html";
-
+function logout() {
+    localStorage.removeItem("token");
+    window.location = "index.html";
 }
-
-
 
 // ================= ADMIN =================
+let currentPage = 1;
+const pageSize = 10;
 
+// FETCH ALL LEAVES (with pagination)
+async function fetchLeaves(page = 1) {
+    const token = localStorage.getItem("token");
 
-// FETCH ALL LEAVES
+    const res = await fetch(`${API}/leaves/all?pageNumber=${page}&pageSize=${pageSize}`, {
+        headers: { "Authorization": "Bearer " + token }
+    });
 
-async function fetchLeaves(){
+    if (!res.ok) {
+        console.log("API ERROR:", res.status);
+        return;
+    }
 
-const token = localStorage.getItem("token");
+    const leaves = await res.json();
+    renderLeaves(leaves);
 
-const res = await fetch(`${API}/leaves/all`,{
-headers:{
-"Authorization":"Bearer "+token
+    document.getElementById("currentPage").textContent = page;
+    currentPage = page;
 }
-});
-
-if(!res.ok){
-console.log("API ERROR:",res.status);
-return;
-}
-
-const leaves = await res.json();
-
-console.log("Leaves from API:",leaves);
-
-renderLeaves(leaves);
-
-}
-
-
 
 // RENDER LEAVES TABLE
+function renderLeaves(leaves) {
+    const tbody = document.getElementById("leavesTableBody");
+    if (!tbody) return;
 
-function renderLeaves(leaves){
+    tbody.innerHTML = "";
 
-const tbody = document.getElementById("leavesTableBody");
+    leaves.forEach(l => {
+        const tr = document.createElement("tr");
+        const status = (l.status || "").toLowerCase();
 
-if(!tbody) return;
+        let actions = "";
+        if (status === "pending") {
+            actions = `
+            <button class="approve-btn" onclick="approveLeave('${l.id}')">Approve</button>
+            <button class="reject-btn" onclick="rejectLeave('${l.id}')">Reject</button>
+            `;
+        }
 
-tbody.innerHTML="";
-
-leaves.forEach(l=>{
-
-const tr=document.createElement("tr");
-
-const status=(l.status || "").toLowerCase();
-
-let actions="";
-
-if(status==="pending"){
-
-actions=`
-<button onclick="approveLeave('${l.id}')">Approve</button>
-<button onclick="rejectLeave('${l.id}')">Reject</button>
-`;
-
+        tr.innerHTML = `
+            <td>${l.userName || ""}</td>
+            <td>${l.leaveType || ""}</td>
+            <td>${new Date(l.startDate).toLocaleDateString()}</td>
+            <td>${new Date(l.endDate).toLocaleDateString()}</td>
+            <td>${l.reason || ""}</td>
+            <td style="color:${getColor(l.status)}">${l.status}</td>
+            <td>${actions}</td>
+        `;
+        tbody.appendChild(tr);
+    });
 }
 
-tr.innerHTML=`
-<td>${l.userName || ""}</td>
-<td>${new Date(l.startDate).toLocaleDateString()}</td>
-<td>${new Date(l.endDate).toLocaleDateString()}</td>
-<td>${l.reason || ""}</td>
-<td style="color:${getColor(l.status)}">${l.status}</td>
-<td>${actions}</td>
-`;
-
-tbody.appendChild(tr);
-
-});
-
+// PAGINATION CONTROLS
+function nextPage() {
+    fetchLeaves(currentPage + 1);
 }
 
-
+function prevPage() {
+    if (currentPage > 1) fetchLeaves(currentPage - 1);
+}
 
 // APPROVE LEAVE
+async function approveLeave(id) {
+    const token = localStorage.getItem("token");
 
-async function approveLeave(id){
+    await fetch(`${API}/leaves/${id}/approve`, {
+        method: "PUT",
+        headers: { "Authorization": "Bearer " + token }
+    });
 
-const token = localStorage.getItem("token");
-
-await fetch(`${API}/leaves/${id}/approve`,{
-method:"PUT",
-headers:{
-"Authorization":"Bearer "+token
+    fetchLeaves(currentPage);
 }
-});
-
-fetchLeaves();
-
-}
-
-
 
 // REJECT LEAVE
+async function rejectLeave(id) {
+    const token = localStorage.getItem("token");
 
-async function rejectLeave(id){
+    await fetch(`${API}/leaves/${id}/reject`, {
+        method: "PUT",
+        headers: { "Authorization": "Bearer " + token }
+    });
 
-const token = localStorage.getItem("token");
-
-await fetch(`${API}/leaves/${id}/reject`,{
-method:"PUT",
-headers:{
-"Authorization":"Bearer "+token
+    fetchLeaves(currentPage);
 }
-});
-
-fetchLeaves();
-
-}
-
-
 
 // REGISTER USER (ADMIN)
+async function registerUser() {
+    const name = document.getElementById("newName").value;
+    const email = document.getElementById("newEmail").value;
+    const password = document.getElementById("newPassword").value;
+    const role = document.getElementById("newRole").value;
 
-async function registerUser(){
+    const token = localStorage.getItem("token");
 
-const name=document.getElementById("newName").value;
-const email=document.getElementById("newEmail").value;
-const password=document.getElementById("newPassword").value;
-const role=document.getElementById("newRole").value;
+    const res = await fetch(`${API}/users`, {
+        method: "POST",
+        headers: {
+            "Authorization": "Bearer " + token,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ name, email, password, role })
+    });
 
-const token = localStorage.getItem("token");
-
-const res = await fetch(`${API}/users`,{
-method:"POST",
-headers:{
-"Authorization":"Bearer "+token,
-"Content-Type":"application/json"
-},
-body:JSON.stringify({name,email,password,role})
-});
-
-if(res.ok)
-alert("User Registered");
-else
-alert("Registration Failed");
-
+    if (res.ok)
+        alert("User Registered");
+    else
+        alert("Registration Failed");
 }
-
-
 
 // ================= EMPLOYEE =================
-
-
 // APPLY LEAVE
+async function applyLeave() {
+    const startDate = document.getElementById("leaveStart").value;
+    const endDate = document.getElementById("leaveEnd").value;
+    const reason = document.getElementById("leaveReason").value;
+    const leaveType = document.getElementById("leaveType").value;
 
-async function applyLeave(){
+    const token = localStorage.getItem("token");
 
-const startDate=document.getElementById("leaveStart").value;
-const endDate=document.getElementById("leaveEnd").value;
-const reason=document.getElementById("leaveReason").value;
+    const res = await fetch(`${API}/leaves/apply`, {
+        method: "POST",
+        headers: {
+            "Authorization": "Bearer " + token,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            startDate: new Date(startDate).toISOString(),
+            endDate: new Date(endDate).toISOString(),
+            reason,
+            leaveType
+        })
+    });
 
-const token = localStorage.getItem("token");
-
-const res = await fetch(`${API}/leaves/apply`,{
-method:"POST",
-headers:{
-"Authorization":"Bearer "+token,
-"Content-Type":"application/json"
-},
-body:JSON.stringify({
-startDate:new Date(startDate).toISOString(),
-endDate:new Date(endDate).toISOString(),
-reason
-})
-});
-
-if(res.ok){
-
-alert("Leave Applied");
-
-fetchMyLeaves();
-
+    if (res.ok) {
+        alert("Leave Applied");
+        fetchMyLeaves();
+        fetchMyPendingLeaves();
+    } else {
+        alert("Apply Failed");
+    }
 }
-else{
-
-alert("Apply Failed");
-
-}
-
-}
-
-
 
 // FETCH EMPLOYEE LEAVES
+async function fetchMyLeaves() {
+    const token = localStorage.getItem("token");
 
-async function fetchMyLeaves(){
+    const res = await fetch(`${API}/leaves/my`, {
+        headers: { "Authorization": "Bearer " + token }
+    });
 
-const token = localStorage.getItem("token");
+    const leaves = await res.json();
+    const tbody = document.getElementById("myLeavesBody");
+    if (!tbody) return;
 
-const res = await fetch(`${API}/leaves/my`,{
-headers:{
-"Authorization":"Bearer "+token
-}
-});
+    tbody.innerHTML = "";
 
-const leaves = await res.json();
+    leaves.forEach(l => {
+        if (l.status && l.status.toLowerCase() === "pending") return;
 
-const tbody=document.getElementById("myLeavesBody");
-
-if(!tbody) return;
-
-tbody.innerHTML="";
-
-leaves.forEach(l=>{
-
-const tr=document.createElement("tr");
-
-tr.innerHTML=`
-<td>${new Date(l.startDate).toLocaleDateString()}</td>
-<td>${new Date(l.endDate).toLocaleDateString()}</td>
-<td>${l.reason}</td>
-<td style="color:${getColor(l.status)}">${l.status}</td>
-`;
-
-tbody.appendChild(tr);
-
-});
-
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+            <td>${l.leaveType || "N/A"}</td>
+            <td>${new Date(l.startDate).toLocaleDateString()}</td>
+            <td>${new Date(l.endDate).toLocaleDateString()}</td>
+            <td>${l.reason || ""}</td>
+            <td style="color:${getColor(l.status)}">${l.status}</td>
+        `;
+        tbody.appendChild(tr);
+    });
 }
 
+// FETCH PENDING LEAVES
+async function fetchMyPendingLeaves() {
+    const token = localStorage.getItem("token");
 
+    const res = await fetch(`${API}/leaves/my-pending`, {
+        headers: { "Authorization": "Bearer " + token }
+    });
 
-// STATUS COLOR
+    const leaves = await res.json();
+    const tbody = document.getElementById("pendingLeavesBody");
+    if (!tbody) return;
 
-function getColor(status){
+    tbody.innerHTML = "";
 
-if(!status) return "black";
-
-status=status.toLowerCase();
-
-if(status==="approved") return "green";
-if(status==="rejected") return "red";
-
-return "orange";
-
+    leaves.forEach(l => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+            <td>${l.leaveType}</td>
+            <td>${new Date(l.startDate).toLocaleDateString()}</td>
+            <td>${new Date(l.endDate).toLocaleDateString()}</td>
+            <td>${l.reason}</td>
+            <td style="color:orange">${l.status}</td>
+        `;
+        tbody.appendChild(tr);
+    });
 }
+
+// ================= STATUS COLOR =================
+function getColor(status) {
+    if (!status) return "black";
+
+    status = status.toLowerCase();
+    if (status === "approved") return "green";
+    if (status === "rejected") return "red";
+    return "orange"; // pending or unknown
+}
+
+// ================= ON LOAD =================
+window.onload = function() {
+    fetchMyLeaves();
+    fetchMyPendingLeaves();
+    if(document.getElementById("leavesTableBody")) fetchLeaves(); // for admin page
+};

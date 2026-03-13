@@ -36,7 +36,8 @@ public class LeavesController : ControllerBase
             tenantId,
             dto.StartDate,
             dto.EndDate,
-            dto.Reason
+            dto.Reason,
+            dto.LeaveType
         );
 
         return Ok(leave);
@@ -57,7 +58,8 @@ public class LeavesController : ControllerBase
         if (!Guid.TryParse(userIdClaim, out var userId))
             return Unauthorized();
 
-        var leaves = _leaveService.GetLeavesByUser(userId, tenantId);
+        var leaves = _leaveService.GetLeavesByUser(userId, tenantId)
+                                  .Where(l => l.Status == "Approved" || l.Status == "Rejected");  
 
         return Ok(leaves);
     }
@@ -67,7 +69,7 @@ public class LeavesController : ControllerBase
     // ----------------------------
     [HttpGet("all")]
     [Authorize(Roles = "Admin")]
-    public IActionResult GetAllEmployeeLeaves()
+    public IActionResult GetAllEmployeeLeaves([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
     {
         var tenantIdClaim = User.FindFirst("TenantId")?.Value;
         Console.WriteLine($"TenantId from JWT: {tenantIdClaim}");
@@ -75,7 +77,7 @@ public class LeavesController : ControllerBase
         if (!Guid.TryParse(tenantIdClaim, out var tenantId))
             return Unauthorized();
 
-        var leaves = _leaveService.GetAllLeaves(tenantId);
+        var leaves = _leaveService.GetAllLeaves(tenantId, pageNumber, pageSize);
 
         return Ok(leaves);
     }
@@ -118,5 +120,22 @@ public class LeavesController : ControllerBase
             return BadRequest("Leave cannot be rejected. It may have been already processed or does not exist.");
 
         return Ok("Leave Rejected");
+    }
+    [HttpGet("my-pending")]
+    public IActionResult GetMyPendingLeaves()
+    {
+        var tenantIdClaim = User.FindFirst("TenantId")?.Value;
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        if (!Guid.TryParse(tenantIdClaim, out var tenantId))
+            return Unauthorized();
+
+        if (!Guid.TryParse(userIdClaim, out var userId))
+            return Unauthorized();
+
+        var leaves = _leaveService.GetLeavesByUser(userId, tenantId)
+                                .Where(l => l.Status == "Pending");
+
+        return Ok(leaves);
     }
 }

@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html>
 <head>
@@ -38,7 +39,7 @@ h2,h3{
 margin-top:0;
 }
 
-input{
+input, select{
 padding:10px;
 margin:8px 5px;
 border:1px solid #ccc;
@@ -95,9 +96,18 @@ background:#f2f2f2;
 
 <div class="container">
 
+<!-- APPLY LEAVE -->
+
 <div class="card">
 
 <h3>Apply Leave</h3>
+
+<select id="leaveType">
+<option value="Sick Leave">Sick Leave</option>
+<option value="Casual Leave">Casual Leave</option>
+<option value="Paid Leave">Paid Leave</option>
+<option value="Work From Home">Work From Home</option>
+</select>
 
 <input id="leaveStart" type="date">
 <input id="leaveEnd" type="date">
@@ -107,6 +117,9 @@ background:#f2f2f2;
 
 </div>
 
+
+<!-- MY LEAVES HISTORY -->
+
 <div class="card">
 
 <h3>My Leaves</h3>
@@ -115,6 +128,7 @@ background:#f2f2f2;
 
 <thead>
 <tr>
+<th>Leave Type</th>
 <th>Start</th>
 <th>End</th>
 <th>Reason</th>
@@ -128,13 +142,42 @@ background:#f2f2f2;
 
 </div>
 
+
+<!-- PENDING LEAVES -->
+
+<div class="card">
+
+<h3>My Pending Leaves</h3>
+
+<table>
+
+<thead>
+<tr>
+<th>Leave Type</th>
+<th>Start</th>
+<th>End</th>
+<th>Reason</th>
+<th>Status</th>
+</tr>
+</thead>
+
+<tbody id="pendingLeavesBody"></tbody>
+
+</table>
+
+</div>
+
 </div>
 
 <script src="script.js"></script>
 
 <script>
+
 fetchMyLeaves();
+fetchMyPendingLeaves();
+
 </script>
 
 </body>
 </html>
+```
