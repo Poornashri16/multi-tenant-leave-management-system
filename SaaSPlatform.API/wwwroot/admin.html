@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Admin Dashboard</title>
+
+<style>
+
+body{
+font-family: Arial, sans-serif;
+margin:0;
+background:#f4f6f9;
+}
+
+.header{
+background:#007bff;
+color:white;
+padding:15px 30px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.container{
+width:90%;
+max-width:1000px;
+margin:30px auto;
+}
+
+.card{
+background:white;
+padding:20px;
+border-radius:8px;
+box-shadow:0 3px 8px rgba(0,0,0,0.1);
+margin-bottom:25px;
+}
+
+h2,h3{
+margin-top:0;
+}
+
+input, select{
+padding:10px;
+margin:8px 5px;
+border:1px solid #ccc;
+border-radius:5px;
+}
+
+button{
+padding:10px 15px;
+border:none;
+border-radius:5px;
+background:#007bff;
+color:white;
+cursor:pointer;
+}
+
+button:hover{
+background:#0056b3;
+}
+
+.logout-btn{
+background:#dc3545;
+}
+
+.logout-btn:hover{
+background:#b02a37;
+}
+
+.approve-btn{
+background:#28a745;
+}
+
+.approve-btn:hover{
+background:#1e7e34;
+}
+
+.reject-btn{
+background:#dc3545;
+}
+
+.reject-btn:hover{
+background:#b02a37;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:15px;
+}
+
+th,td{
+padding:10px;
+text-align:center;
+border-bottom:1px solid #ddd;
+}
+
+th{
+background:#f2f2f2;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+<h2>Admin Dashboard</h2>
+<button class="logout-btn" onclick="logout()">Logout</button>
+</div>
+
+<div class="container">
+
+<div class="card">
+
+<h3>Register User</h3>
+
+<input id="newName" placeholder="Name">
+<input id="newEmail" placeholder="Email">
+<input id="newPassword" type="password" placeholder="Password">
+
+<select id="newRole">
+<option value="Employee">Employee</option>
+<option value="Admin">Admin</option>
+</select>
+
+<button onclick="registerUser()">Register</button>
+
+</div>
+
+<div class="card">
+
+<h3>All Leaves</h3>
+
+<table>
+
+<thead>
+<tr>
+<th>Name</th>
+<th>Start</th>
+<th>End</th>
+<th>Reason</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+</thead>
+
+<tbody id="leavesTableBody"></tbody>
+
+</table>
+
+</div>
+
+</div>
+
+<script src="script.js"></script>
+
+<script>
+window.onload = fetchLeaves;
+</script>
+
+</body>
+</html>

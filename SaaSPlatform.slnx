@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="SaaSPlatform.API/SaaSPlatform.API.csproj" />
+  <Project Path="SaaSPlatform.Application/SaaSPlatform.Application.csproj" />
+  <Project Path="SaaSPlatform.Domain/SaaSPlatform.Domain.csproj" />
+  <Project Path="SaaSPlatform.Infrastructure/SaaSPlatform.Infrastructure.csproj" />
+  <Project Path="SaaSPlatform.Persistence/SaaSPlatform.Persistence.csproj" />
+</Solution>

@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "qufXi9GIwvo=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Poornashri\\OneDrive\\Documents\\MultiTenantSaaS\\SaaSPlatform.Application\\SaaSPlatform.Application.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Poornashri\\.nuget\\packages\\microsoft.extensions.dependencyinjection\\10.0.0\\microsoft.extensions.dependencyinjection.10.0.0.nupkg.sha512",
+    "C:\\Users\\Poornashri\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\10.0.0\\microsoft.extensions.dependencyinjection.abstractions.10.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}
