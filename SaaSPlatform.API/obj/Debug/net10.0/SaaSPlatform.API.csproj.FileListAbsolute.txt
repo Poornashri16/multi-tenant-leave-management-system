@@ -135,7 +135,8 @@ C:\Users\Poornashri\OneDrive\Documents\MultiTenantSaaS\SaaSPlatform.API\obj\Debu
 C:\Users\Poornashri\OneDrive\Documents\MultiTenantSaaS\SaaSPlatform.API\obj\Debug\net10.0\SaaSPlatform.API.pdb
 C:\Users\Poornashri\OneDrive\Documents\MultiTenantSaaS\SaaSPlatform.API\obj\Debug\net10.0\SaaSPlatform.API.genruntimeconfig.cache
 C:\Users\Poornashri\OneDrive\Documents\MultiTenantSaaS\SaaSPlatform.API\obj\Debug\net10.0\ref\SaaSPlatform.API.dll
-C:\Users\Poornashri\OneDrive\Documents\MultiTenantSaaS\SaaSPlatform.API\obj\Debug\net10.0\compressed\8059qtp0kt-{0}-c3ijfsx8on-c3ijfsx8on.gz
-C:\Users\Poornashri\OneDrive\Documents\MultiTenantSaaS\SaaSPlatform.API\obj\Debug\net10.0\compressed\v7kwwkycsf-{0}-r0d13u5k9a-r0d13u5k9a.gz
-C:\Users\Poornashri\OneDrive\Documents\MultiTenantSaaS\SaaSPlatform.API\obj\Debug\net10.0\compressed\bhl0bm5n8m-{0}-klay1qa140-klay1qa140.gz
 C:\Users\Poornashri\OneDrive\Documents\MultiTenantSaaS\SaaSPlatform.API\obj\Debug\net10.0\compressed\f5140qacni-{0}-51y4yboqbz-51y4yboqbz.gz
+C:\Users\Poornashri\OneDrive\Documents\MultiTenantSaaS\SaaSPlatform.API\obj\Debug\net10.0\SaaSPlatform.API.sourcelink.json
+C:\Users\Poornashri\OneDrive\Documents\MultiTenantSaaS\SaaSPlatform.API\obj\Debug\net10.0\compressed\v7kwwkycsf-{0}-qhochti8kr-qhochti8kr.gz
+C:\Users\Poornashri\OneDrive\Documents\MultiTenantSaaS\SaaSPlatform.API\obj\Debug\net10.0\compressed\8059qtp0kt-{0}-pgxwt738eg-pgxwt738eg.gz
+C:\Users\Poornashri\OneDrive\Documents\MultiTenantSaaS\SaaSPlatform.API\obj\Debug\net10.0\compressed\bhl0bm5n8m-{0}-g4nzg0vhuh-g4nzg0vhuh.gz

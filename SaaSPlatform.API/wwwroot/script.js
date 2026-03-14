@@ -246,9 +246,65 @@ function getColor(status) {
     return "orange"; // pending or unknown
 }
 
+// ================= PROFILE MODULE =================
+async function loadProfile() {
+    const token = localStorage.getItem("token");
+    const res = await fetch(`${API}/profile/me`, {
+        headers: { Authorization: `Bearer ${token}` }
+    });
+
+    if (!res.ok) {
+        console.error("Failed to load profile", res.status);
+        return;
+    }
+
+    const data = await res.json();
+    document.getElementById("profile-name").textContent = data.Name;
+    document.getElementById("profile-email").textContent = data.Email;
+    document.getElementById("profile-phone").textContent = data.PhoneNumber;
+    document.getElementById("profile-department").textContent = data.Department;
+    document.getElementById("profile-doj").textContent = new Date(data.DateOfJoining).toLocaleDateString();
+}
+
+function editProfile() {
+    document.getElementById("edit-profile-section").style.display = "block";
+    document.getElementById("edit-name").value = document.getElementById("profile-name").textContent;
+    document.getElementById("edit-phone").value = document.getElementById("profile-phone").textContent;
+    document.getElementById("edit-department").value = document.getElementById("profile-department").textContent;
+}
+
+async function saveProfile() {
+    const token = localStorage.getItem("token");
+    const dto = {
+        Name: document.getElementById("edit-name").value,
+        PhoneNumber: document.getElementById("edit-phone").value,
+        Department: document.getElementById("edit-department").value
+    };
+
+    const res = await fetch(`${API}/profile/me`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify(dto)
+    });
+
+    if (!res.ok) {
+        const text = await res.text();
+        console.error("Profile update failed:", res.status, text);
+        alert("Profile update failed. Check console.");
+        return;
+    }
+
+    document.getElementById("edit-profile-section").style.display = "none";
+    loadProfile(); // reload updated profile
+}
+
 // ================= ON LOAD =================
 window.onload = function() {
     fetchMyLeaves();
     fetchMyPendingLeaves();
+    loadProfile(); // load profile on employee page
     if(document.getElementById("leavesTableBody")) fetchLeaves(); // for admin page
 };

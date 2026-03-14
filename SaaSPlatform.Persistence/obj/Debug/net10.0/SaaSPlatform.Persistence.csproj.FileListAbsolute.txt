@@ -15,3 +15,4 @@ C:\Users\Poornashri\OneDrive\Documents\MultiTenantSaaS\SaaSPlatform.Persistence\
 C:\Users\Poornashri\OneDrive\Documents\MultiTenantSaaS\SaaSPlatform.Persistence\obj\Debug\net10.0\SaaSPlatform.Persistence.pdb
 C:\Users\Poornashri\OneDrive\Documents\MultiTenantSaaS\SaaSPlatform.Persistence\obj\Debug\net10.0\SaaSPlatform.Persistence.genruntimeconfig.cache
 C:\Users\Poornashri\OneDrive\Documents\MultiTenantSaaS\SaaSPlatform.Persistence\obj\Debug\net10.0\ref\SaaSPlatform.Persistence.dll
+C:\Users\Poornashri\OneDrive\Documents\MultiTenantSaaS\SaaSPlatform.Persistence\obj\Debug\net10.0\SaaSPlatform.Persistence.sourcelink.json

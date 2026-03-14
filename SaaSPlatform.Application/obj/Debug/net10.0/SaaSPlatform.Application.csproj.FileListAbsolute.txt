@@ -13,3 +13,4 @@ C:\Users\Poornashri\OneDrive\Documents\MultiTenantSaaS\SaaSPlatform.Application\
 C:\Users\Poornashri\OneDrive\Documents\MultiTenantSaaS\SaaSPlatform.Application\obj\Debug\net10.0\refint\SaaSPlatform.Application.dll
 C:\Users\Poornashri\OneDrive\Documents\MultiTenantSaaS\SaaSPlatform.Application\obj\Debug\net10.0\SaaSPlatform.Application.pdb
 C:\Users\Poornashri\OneDrive\Documents\MultiTenantSaaS\SaaSPlatform.Application\obj\Debug\net10.0\ref\SaaSPlatform.Application.dll
+C:\Users\Poornashri\OneDrive\Documents\MultiTenantSaaS\SaaSPlatform.Application\obj\Debug\net10.0\SaaSPlatform.Application.sourcelink.json

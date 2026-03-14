@@ -8,6 +8,7 @@ public class Leave
     public DateTime EndDate { get; set; }
     public string Reason { get; set; } = string.Empty;
     public string Status { get; set; } = "Pending";
+    public string LeaveType { get; set; }
 
     // NAVIGATION PROPERTY
     public User User { get; set; } = null!;

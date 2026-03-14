@@ -9,3 +9,4 @@ C:\Users\Poornashri\OneDrive\Documents\MultiTenantSaaS\SaaSPlatform.Domain\obj\D
 C:\Users\Poornashri\OneDrive\Documents\MultiTenantSaaS\SaaSPlatform.Domain\obj\Debug\net10.0\refint\SaaSPlatform.Domain.dll
 C:\Users\Poornashri\OneDrive\Documents\MultiTenantSaaS\SaaSPlatform.Domain\obj\Debug\net10.0\SaaSPlatform.Domain.pdb
 C:\Users\Poornashri\OneDrive\Documents\MultiTenantSaaS\SaaSPlatform.Domain\obj\Debug\net10.0\ref\SaaSPlatform.Domain.dll
+C:\Users\Poornashri\OneDrive\Documents\MultiTenantSaaS\SaaSPlatform.Domain\obj\Debug\net10.0\SaaSPlatform.Domain.sourcelink.json

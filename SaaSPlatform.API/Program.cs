@@ -1,15 +1,21 @@
-using SaaSPlatform.Application;
-using SaaSPlatform.Infrastructure;
-using SaaSPlatform.Persistence.Context;
-using SaaSPlatform.API.Services;
-
+// --------------------
+// ALL using statements at the top
+// --------------------
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-
 using System.Text;
 using System.Security.Claims;
 
+using SaaSPlatform.Application;  // IProfileService implementation
+using SaaSPlatform.Infrastructure;
+using SaaSPlatform.Persistence.Context;
+using SaaSPlatform.API.Services;           // UserService, LeaveService
+using SaaSPlatform.API.Services.Interfaces;
+
+// --------------------
+// Create builder
+// --------------------
 var builder = WebApplication.CreateBuilder(args);
 
 // --------------------
@@ -29,6 +35,7 @@ builder.Services.AddInfrastructureServices();
 // --------------------
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ILeaveService, LeaveService>();
+builder.Services.AddScoped<IProfileService, ProfileService>();
 
 // --------------------
 // Add Controllers
@@ -36,7 +43,7 @@ builder.Services.AddScoped<ILeaveService, LeaveService>();
 builder.Services.AddControllers();
 
 // --------------------
-// Enable CORS (for frontend JS to call API)
+// Enable CORS
 // --------------------
 builder.Services.AddCors(options =>
 {
@@ -68,7 +75,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])
         ),
 
-        // VERY IMPORTANT: Correct role claim mapping
         RoleClaimType = ClaimTypes.Role
     };
 });
@@ -91,17 +97,15 @@ var app = builder.Build();
 // --------------------
 // Serve Frontend Files
 // --------------------
-app.UseDefaultFiles();  
-app.UseStaticFiles();   
+app.UseDefaultFiles();
+app.UseStaticFiles();
 
 // --------------------
-// Middleware Pipeline
+// Middleware
 // --------------------
 app.UseCors();
-
 app.UseHttpsRedirection();
-
-app.UseAuthentication();   // must come before Authorization
+app.UseAuthentication();
 app.UseAuthorization();
 
 // --------------------
@@ -110,6 +114,6 @@ app.UseAuthorization();
 app.MapControllers();
 
 // --------------------
-// Run Application
+// Run
 // --------------------
 app.Run();

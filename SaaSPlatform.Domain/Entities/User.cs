@@ -15,5 +15,12 @@ namespace SaaSPlatform.Domain.Entities
         public Guid RoleId { get; set; }
         public bool IsActive { get; set; }
         public string Role { get; set; } = "User";
+        public int LeaveBalance { get; set; } = 20;
+
+        public string PhoneNumber { get; set; } = string.Empty;
+        public string Department { get; set; } = string.Empty;
+        public DateTime DateOfJoining { get; set; }
+        public string ProfilePictureUrl { get; set; } = string.Empty;
+        
     }
 }
