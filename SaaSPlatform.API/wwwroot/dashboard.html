@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HR SaaS Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+    <header class="header">
+        <div class="profile">
+            <div class="profile-pic"></div>
+            <div class="profile-info">
+                <h2 id="username">User Name</h2>
+                <p id="userrole">Role</p>
+                <p id="useremail">email@example.com</p>
+            </div>
+        </div>
+    </header>
+
+    <main class="main">
+        <h1>Dashboard</h1>
+        <div class="cards-container">
+            <div class="card" onclick="navigateTo('leave.html')">
+                <div class="card-icon">📄</div>
+                <h3>Leave</h3>
+                <p>Apply and track your leaves</p>
+            </div>
+            <div class="card" onclick="navigateTo('task.html')">
+                <div class="card-icon">✅</div>
+                <h3>Task</h3>
+                <p>View and manage tasks</p>
+            </div>
+            <div class="card" onclick="navigateTo('reimbursement.html')">
+                <div class="card-icon">💰</div>
+                <h3>Reimbursement</h3>
+                <p>Submit and track reimbursements</p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>© 2026 Multi-Tenant HR SaaS System</p>
+    </footer>
+
+    <script src="dashboard.js"></script>
+</body>
+</html>

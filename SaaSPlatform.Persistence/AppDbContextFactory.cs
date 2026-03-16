@@ -10,7 +10,7 @@ namespace SaaSPlatform.Persistence.Context
             var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
             
             // Use your connection string here
-            optionsBuilder.UseNpgsql("Host=localhost;Database=MultiTenantSaaS;Username=postgres;Password=1234");
+            optionsBuilder.UseNpgsql("Host=localhost;Database=SaaSPlatformDB_Test;Username=postgres;Password=1234");
 
             return new AppDbContext(optionsBuilder.Options);
         }

@@ -19,5 +19,9 @@ namespace SaaSPlatform.Persistence.Context
         public DbSet<Role> Roles { get; set; }
 
         public DbSet<Subscription> Subscriptions { get; set; }
+
+        public DbSet<TaskItem> Tasks { get; set; }
+
+        public DbSet<Reimbursement> Reimbursements { get; set; }
     }
 }

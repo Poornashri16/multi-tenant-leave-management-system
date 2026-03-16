@@ -4,7 +4,7 @@ namespace SaaSPlatform.Domain.Entities
 {
     public class User
     {
-        public Guid Id { get; set; }
+        public Guid Id { get; set; }= Guid.NewGuid();
 
         // Initialize string properties to empty string to avoid CS8618 warnings
         public string Name { get; set; } = string.Empty;

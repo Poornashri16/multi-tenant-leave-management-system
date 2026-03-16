@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Leave Management</title>
+    <link rel="stylesheet" href="dashboard.css">
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #f5f5f5; }
+        h1, h2 { color: #333; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; background: #fff; }
+        th, td { padding: 10px; border: 1px solid #ddd; text-align: center; }
+        th { background-color: #007BFF; color: white; }
+        button { padding: 5px 10px; margin: 2px; cursor: pointer; border-radius: 5px; }
+        form { background: #fff; padding: 20px; border-radius: 5px; margin-bottom: 20px; }
+        input, select { padding: 5px; margin: 5px 0; width: 100%; }
+
+        /* Status colors */
+        .status-pending { color: orange; font-weight: bold; }
+        .status-approved { color: green; font-weight: bold; }
+        .status-rejected { color: red; font-weight: bold; }
+
+        .action-btn { padding: 5px 10px; margin: 0 3px; cursor: pointer; border-radius: 5px; }
+        .btn-approve { background-color: green; color: white; }
+        .btn-reject { background-color: red; color: white; }
+    </style>
+</head>
+<body>
+    <h1>Leave Management</h1>
+
+    <!-- Employee Apply Leave Form -->
+    <div id="employeeSection" style="display:none;">
+        <h2>Apply for Leave</h2>
+        <form id="leaveForm">
+            <label>Start Date:</label>
+            <input type="date" id="startDate" required>
+            <label>End Date:</label>
+            <input type="date" id="endDate" required>
+            <label>Reason:</label>
+            <input type="text" id="reason" required>
+            <label>Leave Type:</label>
+            <select id="leaveType" required>
+                <option value="Casual">Casual</option>
+                <option value="Sick">Sick</option>
+                <option value="Other">Other</option>
+            </select>
+            <button type="submit">Apply Leave</button>
+        </form>
+    </div>
+
+    <!-- Leave Table -->
+    <h2 id="tableTitle">My Leaves</h2>
+    <table id="leaveTable">
+        <thead>
+            <tr>
+                <th>Employee Name</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Reason</th>
+                <th>Status</th>
+                <th>Leave Type</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <button onclick="goBack()">Back to Dashboard</button>
+
+    <script>
+        const token = localStorage.getItem("token");
+        const role = localStorage.getItem("role");
+        const employeeSection = document.getElementById("employeeSection");
+        const leaveTableBody = document.querySelector("#leaveTable tbody");
+        const tableTitle = document.getElementById("tableTitle");
+
+        if (!token || !role) {
+            alert("Please login first.");
+            window.location.href = "index.html";
+        }
+
+        // Show employee form if role is Employee
+        if (role === "Employee") {
+            employeeSection.style.display = "block";
+            tableTitle.innerText = "My Leaves";
+            loadLeavesForEmployee();
+        } else {
+            tableTitle.innerText = "All Employee Leaves";
+            loadLeavesForAdmin();
+        }
+
+        // ================= Employee Apply Leave =================
+        document.getElementById("leaveForm")?.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const startDate = document.getElementById("startDate").value;
+            const endDate = document.getElementById("endDate").value;
+            const reason = document.getElementById("reason").value;
+            const leaveType = document.getElementById("leaveType").value;
+
+            try {
+                const res = await fetch("/api/leaves/apply", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        startDate: new Date(startDate).toISOString(),
+                        endDate: new Date(endDate).toISOString(),
+                        reason,
+                        leaveType
+                    })
+                });
+
+                if (!res.ok) {
+                    const err = await res.json();
+                    throw new Error(err.message || "Failed to apply leave");
+                }
+
+                alert("Leave applied successfully!");
+                document.getElementById("leaveForm").reset();
+                loadLeavesForEmployee();
+
+            } catch (err) {
+                console.error(err);
+                alert("Error applying leave: " + err.message);
+            }
+        });
+
+        // ================= Load Leaves for Employee =================
+        async function loadLeavesForEmployee() {
+            leaveTableBody.innerHTML = "";
+            try {
+                const res = await fetch("/api/leaves/my", {
+                    headers: { "Authorization": `Bearer ${token}` }
+                });
+                const leaves = await res.json();
+
+                leaves.forEach(l => {
+                    const statusClass = l.status.toLowerCase() === "pending" ? "status-pending"
+                        : l.status.toLowerCase() === "approved" ? "status-approved"
+                        : "status-rejected";
+
+                    const tr = document.createElement("tr");
+                    tr.innerHTML = `
+                        <td>${l.userName || "Me"}</td>
+                        <td>${l.startDate.split("T")[0]}</td>
+                        <td>${l.endDate.split("T")[0]}</td>
+                        <td>${l.reason}</td>
+                        <td class="${statusClass}">${l.status}</td>
+                        <td>${l.leaveType}</td>
+                        <td>-</td>
+                    `;
+                    leaveTableBody.appendChild(tr);
+                });
+            } catch (err) { console.error(err); }
+        }
+
+        // ================= Load Leaves for Admin =================
+        async function loadLeavesForAdmin() {
+            leaveTableBody.innerHTML = "";
+            try {
+                const res = await fetch("/api/leaves/all", {
+                    headers: { "Authorization": `Bearer ${token}` }
+                });
+                const leaves = await res.json();
+
+                leaves.forEach(l => {
+                    const statusClass = l.status.toLowerCase() === "pending" ? "status-pending"
+                        : l.status.toLowerCase() === "approved" ? "status-approved"
+                        : "status-rejected";
+
+                    const tr = document.createElement("tr");
+                    const leaveId = l.id;
+
+                    tr.innerHTML = `
+                        <td>${l.userName}</td>
+                        <td>${l.startDate.split("T")[0]}</td>
+                        <td>${l.endDate.split("T")[0]}</td>
+                        <td>${l.reason}</td>
+                        <td class="${statusClass}">${l.status}</td>
+                        <td>${l.leaveType}</td>
+                        <td>
+                            ${l.status.toLowerCase() === "pending" ? `
+                                <button class="action-btn btn-approve" onclick="updateLeave('${leaveId}','Approved')">Approve</button>
+                                <button class="action-btn btn-reject" onclick="updateLeave('${leaveId}','Rejected')">Reject</button>
+                            ` : "-"}
+                        </td>
+                    `;
+                    leaveTableBody.appendChild(tr);
+                });
+            } catch (err) { console.error(err); }
+        }
+
+        // ================= Admin Approve/Reject =================
+        async function updateLeave(leaveId, status) {
+            try {
+                if (!leaveId) return alert("Leave ID is missing!");
+
+                const url = status.toLowerCase() === "approved"
+                    ? `/api/leaves/${leaveId}/approve`
+                    : `/api/leaves/${leaveId}/reject`;
+
+                const res = await fetch(url, {
+                    method: "PUT",
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                });
+
+                if (!res.ok) {
+                    const errData = await res.json().catch(() => null);
+                    const errMsg = errData?.message || "Failed to update leave";
+                    throw new Error(errMsg);
+                }
+
+                alert(`Leave ${status.toLowerCase()} successfully`);
+                loadLeavesForAdmin();
+            } catch (err) {
+                console.error(err);
+                alert("Error updating leave: " + err.message);
+            }
+        }
+
+        // ================= Go Back =================
+        function goBack() {
+            window.location.href = "dashboard.html";
+        }
+    </script>
+</body>
+</html>

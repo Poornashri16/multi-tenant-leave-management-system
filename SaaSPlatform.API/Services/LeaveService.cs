@@ -1,144 +1,144 @@
 using SaaSPlatform.API.DTOs;
 using SaaSPlatform.Persistence.Context;
+using SaaSPlatform.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-public class LeaveService : ILeaveService
+namespace SaaSPlatform.API.Services
 {
-    private readonly AppDbContext _context;
-
-    public LeaveService(AppDbContext context)
+    public class LeaveService : ILeaveService
     {
-        _context = context;
-    }
+        private readonly AppDbContext _context;
 
-    public LeaveResponseDto ApplyLeave(Guid userId, Guid tenantId, DateTime start, DateTime end, string reason, string leaveType)
-    {
-        var leave = new Leave
+        public LeaveService(AppDbContext context)
         {
-            Id = Guid.NewGuid(),
-            UserId = userId,
-            TenantId = tenantId,
-            StartDate = start,
-            EndDate = end,
-            Reason = reason,
-            LeaveType = leaveType,
-            Status = "Pending"
-        };
+            _context = context;
+        }
 
-        _context.Leaves.Add(leave);
-        _context.SaveChanges();
-
-        var user = _context.Users.FirstOrDefault(u => u.Id == userId);
-
-        return new LeaveResponseDto
+        public LeaveResponseDto ApplyLeave(Guid userId, Guid tenantId, DateTime start, DateTime end, string reason, string leaveType)
         {
-            Id = leave.Id,
-            UserName = user != null ? user.Name : "Unknown",
-            StartDate = leave.StartDate,
-            EndDate = leave.EndDate,
-            Reason = leave.Reason,
-            Status = leave.Status,
-            LeaveType = leave.LeaveType
-        };
-    }
-
-    public List<LeaveResponseDto> GetLeaves(Guid tenantId)
-    {
-        return _context.Leaves
-            .Include(l => l.User)
-            .Where(l => l.TenantId == tenantId)
-            .Select(l => new LeaveResponseDto
+            var leave = new Leave
             {
-                Id = l.Id,
-                UserName = l.User.Name,
-                StartDate = l.StartDate,
-                EndDate = l.EndDate,
-                Reason = l.Reason,
-                Status = l.Status,
-                LeaveType = l.LeaveType
-            })
-            .ToList();
-    }
+                Id = Guid.NewGuid(),
+                UserId = userId,
+                TenantId = tenantId,
+                StartDate = start,
+                EndDate = end,
+                Reason = reason,
+                LeaveType = leaveType,
+                Status = "Pending"
+            };
 
-    public List<LeaveResponseDto> GetLeavesByUser(Guid userId, Guid tenantId)
-    {
-        return _context.Leaves
-            .Include(l => l.User)
-            .Where(l => l.TenantId == tenantId && l.UserId == userId)
-            .Select(l => new LeaveResponseDto
+            _context.Leaves.Add(leave);
+            _context.SaveChanges();
+
+            var user = _context.Users.FirstOrDefault(u => u.Id == userId);
+
+            return new LeaveResponseDto
             {
-                Id = l.Id,
-                UserName = l.User.Name,
-                StartDate = l.StartDate,
-                EndDate = l.EndDate,
-                Reason = l.Reason,
-                Status = l.Status,
-                LeaveType = l.LeaveType
-            })
-            .ToList();
-    }
+                Id = leave.Id,
+                UserName = user?.Name ?? "Unknown",
+                StartDate = leave.StartDate,
+                EndDate = leave.EndDate,
+                Reason = leave.Reason,
+                Status = leave.Status,
+                LeaveType = leave.LeaveType
+            };
+        }
 
-    // ✅ This method implements the interface exactly
-    public List<LeaveResponseDto> GetAllLeaves(Guid tenantId, int pageNumber = 1, int pageSize = 10)
-    {
-        return _context.Leaves
-            .Include(l => l.User)
-            .Where(l => l.TenantId == tenantId)
-            .OrderBy(l => l.Status == "Pending" ? 0 : l.Status == "Approved" ? 1 : 2) // Pending first
-            .ThenByDescending(l => l.StartDate) // Most recent first
-            .Skip((pageNumber - 1) * pageSize)
-            .Take(pageSize)  
-            .Select(l => new LeaveResponseDto
-            {
-                Id = l.Id,
-                UserName = l.User.Name,
-                StartDate = l.StartDate,
-                EndDate = l.EndDate,
-                Reason = l.Reason,
-                Status = l.Status,
-                LeaveType = l.LeaveType
-            })
-            .ToList();
-    }
+        public List<LeaveResponseDto> GetLeaves(Guid tenantId)
+        {
+            return _context.Leaves
+                .Include(l => l.User)
+                .Where(l => l.TenantId == tenantId)
+                .Select(l => new LeaveResponseDto
+                {
+                    Id = l.Id,
+                    UserName = l.User.Name,
+                    StartDate = l.StartDate,
+                    EndDate = l.EndDate,
+                    Reason = l.Reason,
+                    Status = l.Status,
+                    LeaveType = l.LeaveType
+                })
+                .ToList();
+        }
 
-    public bool ApproveLeave(Guid leaveId, Guid tenantId)
-    {
-        var leave = _context.Leaves
-            .FirstOrDefault(l => l.Id == leaveId && l.TenantId == tenantId);
+        public List<LeaveResponseDto> GetLeavesByUser(Guid userId, Guid tenantId)
+        {
+            return _context.Leaves
+                .Include(l => l.User)
+                .Where(l => l.UserId == userId && l.TenantId == tenantId)
+                .Select(l => new LeaveResponseDto
+                {
+                    Id = l.Id,
+                    UserName = l.User.Name,
+                    StartDate = l.StartDate,
+                    EndDate = l.EndDate,
+                    Reason = l.Reason,
+                    Status = l.Status,
+                    LeaveType = l.LeaveType
+                })
+                .ToList();
+        }
 
-        if (leave == null || leave.Status != "Pending")
-            return false;
+        public List<LeaveResponseDto> GetAllLeaves(Guid tenantId, int pageNumber, int pageSize)
+        {
+            return _context.Leaves
+                .Include(l => l.User)
+                .Where(l => l.TenantId == tenantId)
+                .OrderByDescending(l => l.StartDate)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .Select(l => new LeaveResponseDto
+                {
+                    Id = l.Id,
+                    UserName = l.User.Name,
+                    StartDate = l.StartDate,
+                    EndDate = l.EndDate,
+                    Reason = l.Reason,
+                    Status = l.Status,
+                    LeaveType = l.LeaveType
+                })
+                .ToList();
+        }
 
-        var user = _context.Users.FirstOrDefault(u => u.Id == leave.UserId);
+        public bool ApproveLeave(Guid leaveId, Guid tenantId)
+        {
+            var leave = _context.Leaves.FirstOrDefault(l => l.Id == leaveId && l.TenantId == tenantId);
 
-        if (user == null)
-            return false;
+            if (leave == null || leave.Status != "Pending")
+                return false;
 
-        int days = (leave.EndDate - leave.StartDate).Days + 1;
+            var user = _context.Users.FirstOrDefault(u => u.Id == leave.UserId);
 
-        if (user.LeaveBalance < days)
-            throw new Exception("Insufficient leave balance");
+            if (user == null)
+                return false;
 
-        user.LeaveBalance -= days;
-        leave.Status = "Approved";
+            int days = (leave.EndDate - leave.StartDate).Days + 1;
 
-        _context.SaveChanges();
+            if (user.LeaveBalance < days)
+                throw new Exception("Insufficient leave balance");
 
-        return true;
-    }
+            user.LeaveBalance -= days;
+            leave.Status = "Approved";
 
-    public bool RejectLeave(Guid leaveId, Guid tenantId)
-    {
-        var leave = _context.Leaves
-            .FirstOrDefault(l => l.Id == leaveId && l.TenantId == tenantId);
+            _context.SaveChanges();
 
-        if (leave == null || leave.Status != "Pending")
-            return false;
+            return true;
+        }
 
-        leave.Status = "Rejected";
+        public bool RejectLeave(Guid leaveId, Guid tenantId)
+        {
+            var leave = _context.Leaves.FirstOrDefault(l => l.Id == leaveId && l.TenantId == tenantId);
 
-        _context.SaveChanges();
+            if (leave == null || leave.Status != "Pending")
+                return false;
 
-        return true;
+            leave.Status = "Rejected";
+
+            _context.SaveChanges();
+
+            return true;
+        }
     }
 }

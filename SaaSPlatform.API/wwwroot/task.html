@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Management</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f4f6f8;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        form, table {
+            background-color: #fff;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 2px 5px rgba(0,0,0,0.1);
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: bold;
+        }
+
+        input, textarea, select, button {
+            padding: 8px;
+            width: 100%;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .status-pending {
+            color: orange;
+            font-weight: bold;
+        }
+
+        .status-inprogress {
+            color: #17a2b8;
+            font-weight: bold;
+        }
+
+        .status-completed {
+            color: green;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Task Management</h2>
+
+    <!-- Admin Task Creation Form -->
+    <div id="adminSection" style="display:none;">
+        <h3>Create Task</h3>
+        <form id="createTaskForm">
+            <label>Title:</label>
+            <input type="text" id="title" required>
+
+            <label>Description:</label>
+            <textarea id="description" required></textarea>
+
+            <label>Assign To:</label>
+            <select id="assignedTo" required></select>
+
+            <label>Due Date:</label>
+            <input type="date" id="dueDate" required>
+
+            <button type="submit">Create Task</button>
+        </form>
+    </div>
+
+    <!-- Task Table -->
+    <div>
+        <h3>Tasks</h3>
+        <table id="tasksTable">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Assigned To</th>
+                    <th>Due Date</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <script src="task.js"></script>
+</body>
+</html>

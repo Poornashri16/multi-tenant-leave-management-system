@@ -1,81 +1,133 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Login</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HR SaaS Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background-color: #f4f6f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
 
-<style>
+        .login-container {
+            background-color: #fff;
+            padding: 40px 30px;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+            width: 350px;
+            text-align: center;
+        }
 
-body{
-font-family: Arial, sans-serif;
-background-color:#f4f6f9;
-display:flex;
-justify-content:center;
-align-items:center;
-height:100vh;
-margin:0;
-}
+        .login-container h1 {
+            margin-bottom: 30px;
+            font-weight: 600;
+            color: #333;
+        }
 
-.container{
-background:white;
-padding:30px;
-width:320px;
-border-radius:8px;
-box-shadow:0 4px 10px rgba(0,0,0,0.1);
-text-align:center;
-}
+        .login-container input, .login-container select {
+            width: 100%;
+            padding: 12px 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 1em;
+        }
 
-h2{
-margin-bottom:20px;
-}
+        .login-container button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 15px;
+            background-color: #1976d2;
+            color: #fff;
+            font-size: 1em;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
 
-input, select{
-width:100%;
-padding:10px;
-margin:8px 0;
-border:1px solid #ccc;
-border-radius:5px;
-font-size:14px;
-}
+        .login-container button:hover {
+            background-color: #115293;
+        }
 
-button{
-width:100%;
-padding:10px;
-background:#007bff;
-color:white;
-border:none;
-border-radius:5px;
-font-size:16px;
-cursor:pointer;
-}
+        .error-msg {
+            color: red;
+            font-size: 0.9em;
+            margin-top: 10px;
+        }
 
-button:hover{
-background:#0056b3;
-}
-
-</style>
-
+        .footer {
+            margin-top: 20px;
+            font-size: 0.8em;
+            color: #777;
+        }
+    </style>
 </head>
-
 <body>
 
-<div class="container">
-
-<h2>Leave Management System</h2>
-
-<input id="email" placeholder="Email">
-
-<input id="password" type="password" placeholder="Password">
-
-<select id="role">
-<option value="Employee">Employee</option>
-<option value="Admin">Admin</option>
-</select>
-
-<button onclick="login()">Login</button>
-
+<div class="login-container">
+    <h1>HR SaaS Login</h1>
+    <input type="email" id="email" placeholder="Email" required>
+    <input type="password" id="password" placeholder="Password" required>
+    <select id="role">
+        <option value="" disabled selected>Select Role</option>
+        <option value="Employee">Employee</option>
+        <option value="Admin">Admin</option>
+    </select>
+    <button id="loginBtn">Login</button>
+    <div class="error-msg" id="errorMsg"></div>
+    <div class="footer">© 2026 Multi-Tenant HR SaaS System</div>
 </div>
 
-<script src="script.js"></script>
+<script>
+document.getElementById("loginBtn").addEventListener("click", async () => {
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value.trim();
+    const role = document.getElementById("role").value;
+    const errorMsg = document.getElementById("errorMsg");
+    errorMsg.innerText = "";
+
+    if (!email || !password || !role) {
+        errorMsg.innerText = "Please enter email, password, and select a role.";
+        return;
+    }
+
+    try {
+        const res = await fetch("/api/auth/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, password })
+        });
+
+        if (!res.ok) throw new Error("Invalid credentials");
+
+        const data = await res.json();
+
+        // Save token and role
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("role", role); // role selected from dropdown
+
+        // Redirect to dashboard
+        window.location.href = "dashboard.html";
+
+    } catch (err) {
+        console.error(err);
+        errorMsg.innerText = "Login failed. Please check your credentials.";
+    }
+});
+
+// Optional: Press Enter to login
+document.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") document.getElementById("loginBtn").click();
+});
+</script>
 
 </body>
 </html>

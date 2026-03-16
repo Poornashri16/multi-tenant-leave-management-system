@@ -1,10 +1,6 @@
-using SaaSPlatform.API.DTOs;
 using SaaSPlatform.Domain.Entities;
 using SaaSPlatform.Persistence.Context;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
+using SaaSPlatform.API.DTOs;
 using Microsoft.Extensions.Configuration;
 
 namespace SaaSPlatform.API.Services
@@ -20,7 +16,23 @@ namespace SaaSPlatform.API.Services
             _configuration = configuration;
         }
 
-        // Existing methods
+        public IEnumerable<User> GetUsersByTenant(Guid tenantId)
+        {
+            return _context.Users
+                .Where(u => u.TenantId == tenantId)
+                .ToList();
+        }
+        public string GetUserName(Guid userId)
+        {
+            var user = _context.Users.FirstOrDefault(u => u.Id == userId);
+            return user != null ? user.Name : "Unknown User";
+        }
+
+        public User? GetUserById(Guid userId)
+        {
+            return _context.Users.FirstOrDefault(u => u.Id == userId);
+        }
+
         public List<UserResponseDto> GetUsers(Guid tenantId)
         {
             return _context.Users
@@ -39,7 +51,6 @@ namespace SaaSPlatform.API.Services
         {
             var user = new User
             {
-                Id = Guid.NewGuid(),
                 Name = dto.Name,
                 Email = dto.Email,
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password),
@@ -61,8 +72,7 @@ namespace SaaSPlatform.API.Services
 
         public bool DeleteUser(Guid id, Guid tenantId)
         {
-            var user = _context.Users
-                .FirstOrDefault(u => u.Id == id && u.TenantId == tenantId);
+            var user = _context.Users.FirstOrDefault(u => u.Id == id && u.TenantId == tenantId);
 
             if (user == null)
                 return false;
@@ -72,39 +82,39 @@ namespace SaaSPlatform.API.Services
 
             return true;
         }
+        
 
-        // ✅ New: Login + JWT token
-        public string Login(string email, string password)
+        public string? Login(string email, string password)
         {
             var user = _context.Users.FirstOrDefault(u => u.Email == email);
-            if (user == null) return null;
 
-            // Verify password
+            if (user == null)
+                return null;
+
             if (!BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
                 return null;
 
-            // Create JWT claims
-            var claims = new List<Claim>
+            var claims = new List<System.Security.Claims.Claim>
             {
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim("TenantId", user.TenantId.ToString()),
-                new Claim("Role", user.Role) // Admin or Employee
+                new(System.Security.Claims.ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new("TenantId", user.TenantId.ToString()),
+                new("Role", user.Role)
             };
 
-            var token = new JwtSecurityToken(
+            var token = new System.IdentityModel.Tokens.Jwt.JwtSecurityToken(
                 issuer: _configuration["Jwt:Issuer"],
                 audience: _configuration["Jwt:Audience"],
                 claims: claims,
                 expires: DateTime.UtcNow.AddHours(1),
-                signingCredentials: new SigningCredentials(
-                    new SymmetricSecurityKey(
-                        Encoding.UTF8.GetBytes(_configuration["Jwt:Key"])
+                signingCredentials: new Microsoft.IdentityModel.Tokens.SigningCredentials(
+                    new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(
+                        System.Text.Encoding.UTF8.GetBytes(_configuration["Jwt:Key"])
                     ),
-                    SecurityAlgorithms.HmacSha256
+                    Microsoft.IdentityModel.Tokens.SecurityAlgorithms.HmacSha256
                 )
             );
 
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            return new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler().WriteToken(token);
         }
     }
 }

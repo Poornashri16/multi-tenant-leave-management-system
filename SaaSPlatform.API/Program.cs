@@ -12,6 +12,7 @@ using SaaSPlatform.Infrastructure;
 using SaaSPlatform.Persistence.Context;
 using SaaSPlatform.API.Services;           // UserService, LeaveService
 using SaaSPlatform.API.Services.Interfaces;
+using SaaSPlatform.Application.Services; // <-- Add this
 
 // --------------------
 // Create builder
@@ -36,6 +37,9 @@ builder.Services.AddInfrastructureServices();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ILeaveService, LeaveService>();
 builder.Services.AddScoped<IProfileService, ProfileService>();
+builder.Services.AddScoped<ITaskService, TaskService>();
+builder.Services.AddScoped<ReimbursementService>();
+
 
 // --------------------
 // Add Controllers
@@ -93,6 +97,17 @@ builder.Services.AddEndpointsApiExplorer();
 // Build App
 // --------------------
 var app = builder.Build();
+// --- TEMPORARY TEST START ---
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    Console.WriteLine("EF is connected to database: " + context.Database.GetDbConnection().Database);
+
+    // Optional: list all table names
+    var tables = context.Database.ExecuteSqlRaw(
+        "SELECT table_name FROM information_schema.tables WHERE table_schema='public';");
+}
+// --- TEMPORARY TEST END ---
 
 // --------------------
 // Serve Frontend Files

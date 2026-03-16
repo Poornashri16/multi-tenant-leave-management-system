@@ -8,9 +8,9 @@ C:\Users\Poornashri\OneDrive\Documents\MultiTenantSaaS\SaaSPlatform.Application\
 C:\Users\Poornashri\OneDrive\Documents\MultiTenantSaaS\SaaSPlatform.Application\obj\Debug\net10.0\SaaSPlatform.Application.AssemblyInfoInputs.cache
 C:\Users\Poornashri\OneDrive\Documents\MultiTenantSaaS\SaaSPlatform.Application\obj\Debug\net10.0\SaaSPlatform.Application.AssemblyInfo.cs
 C:\Users\Poornashri\OneDrive\Documents\MultiTenantSaaS\SaaSPlatform.Application\obj\Debug\net10.0\SaaSPlatform.Application.csproj.CoreCompileInputs.cache
+C:\Users\Poornashri\OneDrive\Documents\MultiTenantSaaS\SaaSPlatform.Application\obj\Debug\net10.0\SaaSPlatform.Application.sourcelink.json
 C:\Users\Poornashri\OneDrive\Documents\MultiTenantSaaS\SaaSPlatform.Application\obj\Debug\net10.0\SaaSPlat.12D3AEC6.Up2Date
 C:\Users\Poornashri\OneDrive\Documents\MultiTenantSaaS\SaaSPlatform.Application\obj\Debug\net10.0\SaaSPlatform.Application.dll
 C:\Users\Poornashri\OneDrive\Documents\MultiTenantSaaS\SaaSPlatform.Application\obj\Debug\net10.0\refint\SaaSPlatform.Application.dll
 C:\Users\Poornashri\OneDrive\Documents\MultiTenantSaaS\SaaSPlatform.Application\obj\Debug\net10.0\SaaSPlatform.Application.pdb
 C:\Users\Poornashri\OneDrive\Documents\MultiTenantSaaS\SaaSPlatform.Application\obj\Debug\net10.0\ref\SaaSPlatform.Application.dll
-C:\Users\Poornashri\OneDrive\Documents\MultiTenantSaaS\SaaSPlatform.Application\obj\Debug\net10.0\SaaSPlatform.Application.sourcelink.json

@@ -1,8 +1,10 @@
 namespace SaaSPlatform.API.Controllers;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using SaaSPlatform.API.DTOs;
+using SaaSPlatform.API.Services;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -58,8 +60,7 @@ public class LeavesController : ControllerBase
         if (!Guid.TryParse(userIdClaim, out var userId))
             return Unauthorized();
 
-        var leaves = _leaveService.GetLeavesByUser(userId, tenantId)
-                                  .Where(l => l.Status == "Approved" || l.Status == "Rejected");  
+        var leaves = _leaveService.GetLeavesByUser(userId, tenantId);
 
         return Ok(leaves);
     }
@@ -72,7 +73,6 @@ public class LeavesController : ControllerBase
     public IActionResult GetAllEmployeeLeaves([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
     {
         var tenantIdClaim = User.FindFirst("TenantId")?.Value;
-        Console.WriteLine($"TenantId from JWT: {tenantIdClaim}");
 
         if (!Guid.TryParse(tenantIdClaim, out var tenantId))
             return Unauthorized();
@@ -97,7 +97,7 @@ public class LeavesController : ControllerBase
         var result = _leaveService.ApproveLeave(id, tenantId);
 
         if (!result)
-            return BadRequest("Leave cannot be approved. It may have been already processed or does not exist.");
+            return BadRequest("Leave cannot be approved.");
 
         return Ok("Leave Approved");
     }
@@ -117,10 +117,14 @@ public class LeavesController : ControllerBase
         var result = _leaveService.RejectLeave(id, tenantId);
 
         if (!result)
-            return BadRequest("Leave cannot be rejected. It may have been already processed or does not exist.");
+            return BadRequest("Leave cannot be rejected.");
 
         return Ok("Leave Rejected");
     }
+
+    // ----------------------------
+    // Get Pending Leaves for logged-in user
+    // ----------------------------
     [HttpGet("my-pending")]
     public IActionResult GetMyPendingLeaves()
     {
@@ -133,8 +137,9 @@ public class LeavesController : ControllerBase
         if (!Guid.TryParse(userIdClaim, out var userId))
             return Unauthorized();
 
-        var leaves = _leaveService.GetLeavesByUser(userId, tenantId)
-                                .Where(l => l.Status == "Pending");
+        var leaves = _leaveService
+            .GetLeavesByUser(userId, tenantId)
+            .Where(l => l.Status == "Pending");
 
         return Ok(leaves);
     }

@@ -10,4 +10,5 @@ namespace SaaSPlatform.API.DTOs
 
         public required string Role { get; set; }
     }
+   
 }

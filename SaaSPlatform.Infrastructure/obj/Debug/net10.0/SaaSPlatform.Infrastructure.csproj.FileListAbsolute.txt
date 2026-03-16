@@ -12,9 +12,9 @@ C:\Users\Poornashri\OneDrive\Documents\MultiTenantSaaS\SaaSPlatform.Infrastructu
 C:\Users\Poornashri\OneDrive\Documents\MultiTenantSaaS\SaaSPlatform.Infrastructure\obj\Debug\net10.0\SaaSPlatform.Infrastructure.AssemblyInfoInputs.cache
 C:\Users\Poornashri\OneDrive\Documents\MultiTenantSaaS\SaaSPlatform.Infrastructure\obj\Debug\net10.0\SaaSPlatform.Infrastructure.AssemblyInfo.cs
 C:\Users\Poornashri\OneDrive\Documents\MultiTenantSaaS\SaaSPlatform.Infrastructure\obj\Debug\net10.0\SaaSPlatform.Infrastructure.csproj.CoreCompileInputs.cache
+C:\Users\Poornashri\OneDrive\Documents\MultiTenantSaaS\SaaSPlatform.Infrastructure\obj\Debug\net10.0\SaaSPlatform.Infrastructure.sourcelink.json
 C:\Users\Poornashri\OneDrive\Documents\MultiTenantSaaS\SaaSPlatform.Infrastructure\obj\Debug\net10.0\SaaSPlat.84B15C4B.Up2Date
 C:\Users\Poornashri\OneDrive\Documents\MultiTenantSaaS\SaaSPlatform.Infrastructure\obj\Debug\net10.0\SaaSPlatform.Infrastructure.dll
 C:\Users\Poornashri\OneDrive\Documents\MultiTenantSaaS\SaaSPlatform.Infrastructure\obj\Debug\net10.0\refint\SaaSPlatform.Infrastructure.dll
 C:\Users\Poornashri\OneDrive\Documents\MultiTenantSaaS\SaaSPlatform.Infrastructure\obj\Debug\net10.0\SaaSPlatform.Infrastructure.pdb
 C:\Users\Poornashri\OneDrive\Documents\MultiTenantSaaS\SaaSPlatform.Infrastructure\obj\Debug\net10.0\ref\SaaSPlatform.Infrastructure.dll
-C:\Users\Poornashri\OneDrive\Documents\MultiTenantSaaS\SaaSPlatform.Infrastructure\obj\Debug\net10.0\SaaSPlatform.Infrastructure.sourcelink.json
