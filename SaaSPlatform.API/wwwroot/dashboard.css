@@ -5,6 +5,7 @@ body {
     color: #333;
 }
 
+/* HEADER */
 .header {
     background-color: #fff;
     padding: 20px;
@@ -35,11 +36,13 @@ body {
     color: #666;
 }
 
+/* MAIN */
 .main {
     padding: 40px 20px;
     text-align: center;
 }
 
+/* CARDS */
 .cards-container {
     display: flex;
     justify-content: center;
@@ -77,6 +80,28 @@ body {
     color: #666;
 }
 
+/* FORM ELEMENTS (used in admin page also) */
+input, select {
+    padding: 8px;
+    width: 90%;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+button {
+    padding: 8px 12px;
+    border: none;
+    background-color: #1976d2;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #125aa0;
+}
+
+/* FOOTER */
 .footer {
     text-align: center;
     padding: 15px;

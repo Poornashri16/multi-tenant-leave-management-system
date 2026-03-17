@@ -112,7 +112,7 @@ document.getElementById("loginBtn").addEventListener("click", async () => {
 
         // Save token and role
         localStorage.setItem("token", data.token);
-        localStorage.setItem("role", role); // role selected from dropdown
+        localStorage.setItem("role", data.role); // role selected from dropdown
 
         // Redirect to dashboard
         window.location.href = "dashboard.html";
