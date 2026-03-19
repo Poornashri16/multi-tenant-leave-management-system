@@ -96,7 +96,8 @@ namespace SaaSPlatform.API.Controllers
             {
                 Token = jwt,
                 Name = user.Name,
-                TenantId = user.TenantId
+                TenantId = user.TenantId,
+                Role = user.Role 
             };
 
             return Ok(response);

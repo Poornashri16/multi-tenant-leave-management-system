@@ -23,7 +23,7 @@ namespace SaaSPlatform.API.Services
         bool DeleteUser(Guid id, Guid tenantId);   // ✅ Changed from int to Guid
 
         // Login
-        string? Login(string email, string password);
+        (string? Token, string? Role) Login(string email, string password);
 
         string GetUserName(Guid userId);
 

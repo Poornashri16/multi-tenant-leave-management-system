@@ -27,12 +27,14 @@ namespace SaaSPlatform.API.Controllers
             if (dto == null || string.IsNullOrEmpty(dto.Email) || string.IsNullOrEmpty(dto.Password))
                 return BadRequest("Email and password are required.");
 
-            var token = _userService.Login(dto.Email, dto.Password);
+            var result = _userService.Login(dto.Email, dto.Password);
 
-            if (token == null)
+            if (result.Token == null)
                 return Unauthorized("Invalid credentials");
 
-            return Ok(new { token });
+            return Ok(new { 
+                token=result.Token,
+                role=result.Role });
         }
 
         // -------------------------

@@ -84,15 +84,15 @@ namespace SaaSPlatform.API.Services
         }
         
 
-        public string? Login(string email, string password)
+        public (string? Token, string? Role) Login(string email, string password)
         {
             var user = _context.Users.FirstOrDefault(u => u.Email == email);
 
             if (user == null)
-                return null;
+                return (null, null);
 
             if (!BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
-                return null;
+                return (null, null);
 
             var claims = new List<System.Security.Claims.Claim>
             {
@@ -114,7 +114,9 @@ namespace SaaSPlatform.API.Services
                 )
             );
 
-            return new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler().WriteToken(token);
+            var tokenHandler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
+            var tokenString = tokenHandler.WriteToken(token);
+            return (tokenString, user.Role);
         }
     }
 }
